@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from datetime import datetime
 
 from .report import Query_model_by_duration
+from django.db.models import Q
 from django.db.models import Sum
 
 
@@ -38,12 +39,13 @@ def index(request):
             date_str = str(date)
             return render(request,'booking_brain/index.html', {'passenger': passengers, 'date':date , 'date_str' : date_str , 'current_t_d': current_t_d})
 
-
+@login_required(login_url='login_user')
 def bookings(request):
     bookings = Booking.objects.all()
     return render(request,'booking_brain/bookings.html', {'booking': bookings})
     
-    
+@login_required(login_url='login_user')    
+
 def payments(request):
     if request.method == 'POST':
         booking_no = request.POST.get('booking_no')
@@ -67,6 +69,7 @@ def payments(request):
         return render(request , 'booking_brain/single_payment.html' ,{'payment': payment, 'booking_no':booking_no})
 
     return render(request, 'booking_brain/payments.html')
+@login_required(login_url='login_user')
 
 def make_payment(request,pk):
     passenger = Passenger.objects.get(id=pk)
@@ -89,7 +92,8 @@ def make_payment(request,pk):
         })
         context = {'form':form , 'passenger':passenger, 'booking':booking}
         return render(request,'booking_brain/make_payment.html', context )
-   
+
+@login_required(login_url='login_user')  
 def report_payment(request):
     
     payments_today =  Query_model_by_duration(Payment, 'day')
@@ -122,6 +126,30 @@ def report_payment(request):
   
     return render(request,'booking_brain/report_payment.html', context)
 
+def custom_report(request):
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        filtered_objects = Payment.objects.filter(
+        Q(Date_created__gte=start_date) & Q(Date_created__lte=end_date)
+        )
+        if filtered_objects:
+            custom_objects = filtered_objects
+            custom_objects_ea = custom_objects.aggregate(Sum('Amount_EA'))['Amount_EA__sum']
+            custom_objects_z_com = custom_objects.aggregate(Sum('Amount_Z_com'))['Amount_Z_com__sum']
+            custom_objects_m_com = custom_objects.aggregate(Sum('Amount_M_com'))['Amount_M_com__sum']
+            custom_objects_amount = custom_objects.aggregate(Sum('Amount'))['Amount__sum']
+            context = {'payments':custom_objects, 'custom_objects_ea' : custom_objects_ea,
+                       'custom_objects_z_com': custom_objects_z_com, 'custom_objects_m_com' : custom_objects_m_com,
+                       'custom_objects_amount' : custom_objects_amount}
+
+            return render(request,'booking_brain/custom_report.html', context)
+
+    else:
+
+        return render(request,'booking_brain/custom_report.html')
+
+@login_required(login_url='login_user')
 def report(request):
     pass
 @login_required(login_url='login_user')

@@ -52,6 +52,23 @@ document.addEventListener("DOMContentLoaded", function () {
             doc.save("daily.pdf");
         }
 
+        function generatePDFC() {
+            const doc = new jsPDF('l','pt','letter');
+            const table = document.getElementById("custom");
+            if(!table) {
+                console.log("the table id is not fount")
+            }
+
+            doc.autoTable({
+                html:'#custom',
+            }
+
+            )
+    
+            // Save the PDF
+            doc.save("custom.pdf");
+        }
+
         function generatePDFS() {
             const doc = new jsPDF('p','pt','letter');
             const table = document.getElementById("singleTable");
@@ -96,6 +113,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const singleButton = document.getElementById("singleButton");
         if (singleButton){
             singleButton.addEventListener("click", generatePDFS);
+        }
+
+        const customButton = document.getElementById("customButton");
+        if (customButton){
+            customButton.addEventListener("click", generatePDFC);
         }
 
         // make feilds reflect input add input event listener to the input field
