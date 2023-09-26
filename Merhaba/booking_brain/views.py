@@ -45,7 +45,6 @@ def bookings(request):
     return render(request,'booking_brain/bookings.html', {'booking': bookings})
     
 @login_required(login_url='login_user')    
-
 def payments(request):
     if request.method == 'POST':
         booking_no = request.POST.get('booking_no')
@@ -63,35 +62,67 @@ def payments(request):
             messages.error(request , 'No Payment found')
             passenger = passenger
             booking = booking
-            
             return render(request,'booking_brain/payments.html', {'passenger': passenger, 'booking': booking})
         booking_no = booking_no 
         return render(request , 'booking_brain/single_payment.html' ,{'payment': payment, 'booking_no':booking_no})
 
     return render(request, 'booking_brain/payments.html')
-@login_required(login_url='login_user')
 
+def delet_payment(request,pk):
+    payment_to_delete  = Payment.objects.get(id=pk)
+    payment_to_delete.delete()
+    messages.success(request,'Payment deleted successfully')
+    return redirect('payments')
+
+
+
+@login_required(login_url='login_user')
 def make_payment(request,pk):
     passenger = Passenger.objects.get(id=pk)
     booking = Booking.objects.get(passenger=passenger)
     if request.method == 'POST':
+        
         form = Create_Payment(request.POST)
         if form.is_valid():
             payment = form.save(commit=False)
             payment.user = request.user
+            payment.Ticket_no = None
             payment.passenger = passenger
             payment.save()
             messages.success(request,'Payment added successfully')
             return redirect('payments')
         else:
+            
             messages.success(request,'Error occured while adding payment')
-            return redirect('make_payment')
+            return redirect('make_payment', pk=pk)
     else:
         form = Create_Payment(initial={
-            'Amount' : passenger.Amount
+            'Amount' : passenger.Amount,
+            'Ticket_no' : "0"
         })
         context = {'form':form , 'passenger':passenger, 'booking':booking}
         return render(request,'booking_brain/make_payment.html', context )
+
+def add_ticket_no(request,pk):
+    payment_ = Payment.objects.get(id=pk)
+    passenger = payment.passenger
+    booking_no = Booking.objects.get(passenger=passenger).Booking_no
+    if request.method == 'POST':
+        form = Create_Payment(request.POST, instance=payment_)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            form.save()
+            messages.success(request,'Ticket no added successfully')
+            return redirect('payments')
+            # return render(request , 'booking_brain/single_payment.html' ,{'payment': payment_, 'booking_no':booking_no})
+
+    else:
+        form = Create_Payment(instance=payment)
+        context = {'form':form , 'passenger':passenger, 'payment':payment}
+        return render(request,'booking_brain/add_ticket_no.html', context )
+        
+
+
 
 @login_required(login_url='login_user')  
 def report_payment(request):
@@ -103,6 +134,7 @@ def report_payment(request):
     today_amount = payments_today.aggregate(Sum('Amount'))['Amount__sum']
 
     payments_this_week =  Query_model_by_duration(Payment, 'week')
+    print(payments_this_week)
     week_amount_ea = payments_this_week.aggregate(Sum('Amount_EA'))['Amount_EA__sum']
     week_amount_z_com = payments_this_week.aggregate(Sum('Amount_Z_com'))['Amount_Z_com__sum']
     week_amount_m_com = payments_this_week.aggregate(Sum('Amount_M_com'))['Amount_M_com__sum']

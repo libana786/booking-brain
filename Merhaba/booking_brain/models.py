@@ -64,7 +64,7 @@ class Payment(models.Model):
     Date_created = models.DateTimeField(auto_now_add=True)
     Payment_method = models.CharField(max_length=50)
     Payment_status = models.BooleanField(default=True)
-    Ticket_no = models.CharField(max_length=50)
+    Ticket_no = models.CharField(max_length=50, null=True)
     Payment_ref = models.CharField(max_length=50)
     Amount_EA = models.IntegerField()
     Amount_Z_com = models.IntegerField()

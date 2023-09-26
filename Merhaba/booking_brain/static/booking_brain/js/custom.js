@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
             // Save the PDF
             doc.save("monthly.pdf");
+
         }
         // today
         function generatePDFD() {
@@ -75,13 +76,20 @@ document.addEventListener("DOMContentLoaded", function () {
             if(!table) {
                 console.log("the table id is not fount")
             }
-            const logoImage = ''; 
+            const logoImage = document.getElementById("logo");
+            doc.rect(50, 50, 100, 110, 'F'); // Sets the fill mode
+            doc.setFillColor(243, 250, 210);     // Sets the fill color to red
+            doc.rect(50, 50, 100, 110, 'F'); 
 
             // Add the logo
-            doc.addImage(logoImage, 'PNG', 40, 40, 100, 40); 
+            doc.addImage(logoImage, 'PNG', 250, 10, 100,100);
+ 
 
             doc.autoTable({
                 html:'#singleTable',
+                startY: 120,
+                startX: 320,
+                tableWidth: 400,
             })
             const yPosition = doc.autoTable.previous.finalY + 20; // Adjust the vertical position as needed
             doc.setDrawColor(0); // Set line color to black
@@ -89,6 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
             doc.line(40, yPosition, 550, yPosition); // Draw a horizontal line
             doc.autoTable({
                 html:'#singleTable',
+                startY: yPosition + 30,
+                tableWidth: 400,
             })
             // Save the PDF
             doc.save("receipt.pdf");
@@ -109,6 +119,43 @@ document.addEventListener("DOMContentLoaded", function () {
         if (monthButton){
             monthButton.addEventListener("click", generatePDFM);
         }
+
+        // xls
+        const todayButtonX = document.getElementById("todayButtonX");
+        if (todayButtonX){
+            todayButtonX.addEventListener("click", function(){
+                $("#daily").table2excel({
+                    filename: "daily.xls",
+                    fileext: ".xls"
+                    }
+                )
+            })
+        }
+        const weekButtonX = document.getElementById("weekButtonX");
+        if (weekButtonX){
+            weekButtonX.addEventListener("click", function(){
+                $("#weekly").table2excel({
+                    filename: "weekly.xls",
+                    fileext: ".xls"
+                    }
+                )
+            })
+        }
+
+        //
+        const monthButtonX = document.getElementById("monthButtonX");
+        if (monthButtonX){
+            monthButtonX.addEventListener("click", function(){
+                $("#monthly").table2excel({
+                    filename: "monthly.xls",
+                    fileext: ".xls"
+                    }
+                )
+            })
+        }
+
+
+        // 
 
         const singleButton = document.getElementById("singleButton");
         if (singleButton){
@@ -144,6 +191,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initial calculation
     updateTotalAmount();
+
+    //
+    function capitalizeFirstLetter(inputElement) {
+        const value = inputElement.value;
+        if (value.length > 0) {
+            inputElement.value = value.charAt(0).toUpperCase() + value.slice(1);
+        }
+    }
+
+    // Add event listeners to the First Name, Middle Name, and Last Name input fields
+    const firstNameInput = document.getElementById("firstn");
+    const middleNameInput = document.getElementById("midn");
+    const lastNameInput = document.getElementById("lname");
+
+    if (firstNameInput) {
+        firstNameInput.addEventListener("input", function () {
+            capitalizeFirstLetter(firstNameInput);
+        });
+    }
+
+    if (middleNameInput) {
+        middleNameInput.addEventListener("input", function () {
+            capitalizeFirstLetter(middleNameInput);
+        });
+    }
+
+    if (lastNameInput) {
+        lastNameInput.addEventListener("input", function () {
+            capitalizeFirstLetter(lastNameInput);
+        });
+    }
+
 
 });
 

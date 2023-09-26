@@ -11,9 +11,9 @@ class CreateCustomerForm(forms.ModelForm):
         model = Passenger
         fields = ['First_name', 'Middle_name', 'Last_name', 'Phone_number', 'Departure_place', 'Destination', 'Departure_date', 'Return_date', 'Amount']
         widgets = {
-            'First_name': forms.TextInput(attrs={'class': 'form-control col-6' ,'id':'firstn', 'placeholder': 'First Name' , 'required': True}),
-            'Middle_name': forms.TextInput(attrs={'class': 'form-control col-6', 'id':'midn' , 'placeholder': 'Middle Name' , }),
-            'Last_name': forms.TextInput(attrs={'class': 'form-control' , 'placeholder': 'Last Name' , 'required': True}),
+            'First_name': forms.TextInput(attrs={'id':'firstn','class': 'form-control col-6' ,'id':'firstn', 'placeholder': 'First Name' , 'required': True}),
+            'Middle_name': forms.TextInput(attrs={'id':'midn','class': 'form-control col-6', 'id':'midn' , 'placeholder': 'Middle Name' , }),
+            'Last_name': forms.TextInput(attrs={'id':'lname','class': 'form-control' , 'placeholder': 'Last Name' , 'required': True}),
             'Phone_number': forms.NumberInput(attrs={'type': 'number','class': 'form-control' , 'placeholder': 'Phone Number' , 'required': True}),
             'Departure_place': forms.TextInput(attrs={'class': 'form-control' , 'placeholder': 'Departure Place' , 'required': True}),
             'Destination': forms.TextInput(attrs={'class': 'form-control' , 'placeholder': 'Destination' , 'required': True}),
@@ -43,7 +43,7 @@ class Create_Payment(forms.ModelForm):
         widgets = {
             'Payment_method': forms.Select(attrs={'class': 'form-control' , 'placeholder': 'Gender' , 'required': True}, choices=(("Ebirr","Ebirr"),("CBE","CBE"),("Cash","Cash"))),
             'Payment_ref': forms.TextInput(attrs={'class': 'form-control col-6' , 'placeholder': 'Payment Ref' , 'required': True}),
-            'Ticket_no' : forms.TextInput(attrs={'class': 'form-control col-6' , 'placeholder': 'Payment Ref' , 'required': True}),
+            'Ticket_no' : forms.TextInput(attrs={'class': 'form-control col-6' , 'placeholder': 'Ticket number', }),
             'Amount_EA' : forms.NumberInput(attrs={'id':'Amount_EA', 'type': 'number', 'class': 'form-control' , 'placeholder': 'Ethiopian Airline' , 'required': True}),
             'Amount_M_com' : forms.NumberInput(attrs={'id':'Amount_M_com','type': 'number', 'class': 'form-control' , 'placeholder': 'Merhaba Commision' , 'required': True}),
             'Amount_Z_com' : forms.NumberInput(attrs={'id':'Amount_Z_com','type': 'number', 'class': 'form-control' , 'placeholder': 'Zamzam Commision' , 'required': True}),

@@ -11,9 +11,11 @@ def Query_model_by_duration(model, duration):
         start_date = today.replace(hour=0, minute=0, second=0, microsecond=0)
         end_date = today.replace(hour=23, minute=59, second=59, microsecond=999)
     elif duration == 'week':
-        # Query for objects created within the current week (Monday to Sunday)
-        start_date = today - timedelta(days=today.weekday())
-        end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59, microseconds=999)
+ # Find the first day (usually Monday) of the current week
+        first_day_of_week = today - timedelta(days=today.weekday())
+        # Calculate the end of the week (Sunday)
+        end_date = first_day_of_week + timedelta(days=6, hours=23, minutes=59, seconds=59, microseconds=999)
+        start_date = first_day_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
     elif duration == 'month':
         # Query for objects created within the current month
         start_date = today.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
@@ -28,3 +30,10 @@ def Query_model_by_duration(model, duration):
     )
 
     return filtered_objects
+
+# A = Query_model_by_duration(Payment,'week')
+# if A:
+#     print("yess................")
+#     print(A)
+# else:
+#     print("nooooooo")

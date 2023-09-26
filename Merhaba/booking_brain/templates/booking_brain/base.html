@@ -50,8 +50,8 @@
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-light navbar-light">
                 <a href="{% url 'index' %}" class="navbar-brand mx-4 mb-3">
-                  <!-- <img src="{% static 'booking_brain/img/ff.png'%}"></img> -->
-                    <h3 class="text-primary">MARHABA</h3>
+                  
+                    <h3 class="text-primary"><img src="{% static 'booking_brain/img/logo.png'%}" height="70" width="70" id="logo"></img> MARHABA</h3>
                 </a>
                
                 <div class="navbar-nav w-100">
@@ -136,6 +136,8 @@
     <!--- jspdf-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script> 
+    <!-- excel js -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-table2excel@1.1.1/dist/jquery.table2excel.min.js"></script>
     <!-- Template Javascript -->
     <script src="{% static 'booking_brain/js/main.js'%}"></script>
     <script src="{% static 'booking_brain/js/custom.js'%}"></script>
