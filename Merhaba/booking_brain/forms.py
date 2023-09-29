@@ -18,7 +18,7 @@ class CreateCustomerForm(forms.ModelForm):
             'Departure_place': forms.TextInput(attrs={'class': 'form-control' , 'placeholder': 'Departure Place' , 'required': True}),
             'Destination': forms.TextInput(attrs={'class': 'form-control' , 'placeholder': 'Destination' , 'required': True}),
             'Departure_date': forms.DateInput(attrs={"type": "date",'class': 'form-control' , 'placeholder': 'Departure Date' , 'required': True}),
-            'Return_date': forms.DateInput(attrs={'type': 'date','class': 'form-control' , 'placeholder': 'Return Date' , 'required': True}),
+            'Return_date': forms.DateInput( attrs={'type': 'date','class': 'form-control' , 'placeholder': 'Return Date', "required": False }),
             'Amount': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control' , 'placeholder': 'Amount' , 'required': True}),
         }
     
