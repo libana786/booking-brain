@@ -41,7 +41,7 @@ class Create_Payment(forms.ModelForm):
         model = Payment
         fields = ['Payment_method',  'Payment_ref','Ticket_no', 'Amount_EA','Amount_Z_com','Amount_M_com', 'Amount']
         widgets = {
-            'Payment_method': forms.Select(attrs={'class': 'form-control' , 'placeholder': 'Gender' , 'required': True}, choices=(("Ebirr","Ebirr"),("CBE","CBE"),("Cash","Cash"))),
+            'Payment_method': forms.Select(attrs={'class': 'form-control' , 'placeholder': 'Gender' , 'required': True}, choices=(("Ebirr","Ebirr"),("CBE","CBE"),("IDA","IDA"),("IDB","IDB"))),
             'Payment_ref': forms.TextInput(attrs={'class': 'form-control col-6' , 'placeholder': 'Payment Ref' , 'required': True}),
             'Ticket_no' : forms.TextInput(attrs={'class': 'form-control col-6' , 'placeholder': 'Ticket number', }),
             'Amount_EA' : forms.NumberInput(attrs={'id':'Amount_EA', 'type': 'number', 'class': 'form-control' , 'placeholder': 'Ethiopian Airline' , 'required': True}),

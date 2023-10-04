@@ -46,6 +46,17 @@ def bookings(request):
     
 @login_required(login_url='login_user')    
 def payments(request):
+    payment_methods = ['Ebirr', 'CBE', 'IDA', 'IDB']
+    durations = ['day', 'week' , 'month']
+    context = {}
+    for duration in durations:
+            for method in payment_methods:
+                queryset = Query_model_by_duration(Payment, duration)
+                filtered_queryset = queryset.filter(Payment_method=method)
+                total_amount = filtered_queryset.aggregate(Sum('Amount'))['Amount__sum']
+                if total_amount:
+                    key = f'payments_{duration}_{method.lower()}'
+                    context[key] = total_amount
     if request.method == 'POST':
         booking_no = request.POST.get('booking_no')
         try:
@@ -62,11 +73,14 @@ def payments(request):
             messages.error(request , 'No Payment found')
             passenger = passenger
             booking = booking
-            return render(request,'booking_brain/payments.html', {'passenger': passenger, 'booking': booking})
+            context['passenger'] = passenger
+            context['booking'] = booking
+            return render(request,'booking_brain/payments.html', context)
         booking_no = booking_no 
         return render(request , 'booking_brain/single_payment.html' ,{'payment': payment, 'booking_no':booking_no})
-
-    return render(request, 'booking_brain/payments.html')
+    else:
+        print(context)
+        return render(request,'booking_brain/payments.html', context)
 
 def delet_payment(request,pk):
     payment_to_delete  = Payment.objects.get(id=pk)
@@ -134,7 +148,6 @@ def report_payment(request):
     today_amount = payments_today.aggregate(Sum('Amount'))['Amount__sum']
 
     payments_this_week =  Query_model_by_duration(Payment, 'week')
-    print(payments_this_week)
     week_amount_ea = payments_this_week.aggregate(Sum('Amount_EA'))['Amount_EA__sum']
     week_amount_z_com = payments_this_week.aggregate(Sum('Amount_Z_com'))['Amount_Z_com__sum']
     week_amount_m_com = payments_this_week.aggregate(Sum('Amount_M_com'))['Amount_M_com__sum']
