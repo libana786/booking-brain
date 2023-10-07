@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'Merhaba.wsgi.application'
 # }
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'brain',
-        'USER': 'postgres',
-        'PASSWORD': 'FhWhqgpAlFuB',
-        'HOST': '3.110.210.223',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'booking_brain',
+        'USER': 'liban',
+        'PASSWORD': 'Lg1OsiV1Kb7xuXtckwqk',
+        'HOST': '13.235.115.166',
         'PORT': '5432',
 
     }
