@@ -12,7 +12,9 @@
     bottom: 45px;
     z-index: 99;
 }
-
+body{
+    background-color: #E9F6B8;
+}
 
 /*** Spinner ***/
 #spinner {

@@ -71,15 +71,19 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         function generatePDFS() {
+            
+
+
+// Now, you have the selected rows in the "selectedRows" array
+
+
             const doc = new jsPDF('p','pt','letter');
             const table = document.getElementById("singleTable");
             if(!table) {
                 console.log("the table id is not fount")
             }
             const logoImage = document.getElementById("logo");
-            doc.rect(50, 50, 100, 110, 'F'); // Sets the fill mode
-            doc.setFillColor(243, 250, 210);     // Sets the fill color to red
-            doc.rect(50, 50, 100, 110, 'F'); 
+
 
             // Add the logo
             doc.addImage(logoImage, 'PNG', 250, 10, 100,100);
@@ -88,16 +92,22 @@ document.addEventListener("DOMContentLoaded", function () {
             doc.autoTable({
                 html:'#singleTable',
                 startY: 120,
-                startX: 320,
+                startX: 0,
                 tableWidth: 400,
             })
             const yPosition = doc.autoTable.previous.finalY + 20; // Adjust the vertical position as needed
             doc.setDrawColor(0); // Set line color to black
             doc.setLineWidth(1); // Set line width
             doc.line(40, yPosition, 550, yPosition); // Draw a horizontal line
+            doc.addImage(logoImage, 'PNG', 250, 370, 100,100);
+            
+            const tb = document.querySelector("#singleTable");
+            allRows = tb.querySelectorAll("tr");
+            rowsToDelete = Array.from(allRows).slice(6,9)
+            rowsToDelete.forEach(row => row.remove())
             doc.autoTable({
                 html:'#singleTable',
-                startY: yPosition + 30,
+                startY: yPosition + 130,
                 tableWidth: 400,
             })
             // Save the PDF

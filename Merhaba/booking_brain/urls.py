@@ -20,6 +20,7 @@ urlpatterns =[
     path('custom_report', views.custom_report , name = 'custom_report'),
     path('add_ticket_no/<int:pk>', views.add_ticket_no , name = 'add_ticket_no'),
     path('delet_payment/<int:pk>', views.delet_payment , name = 'delet_payment'),
+    path('trash', views.trash , name = 'trash'),
 
 
 

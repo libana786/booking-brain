@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from .forms import CreateCustomerForm, Create_Booking, Create_Payment
-from .models import Passenger, Booking,Payment
+from .models import Passenger, Booking,Payment , Trash
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -43,7 +43,12 @@ def index(request):
 def bookings(request):
     bookings = Booking.objects.all()
     return render(request,'booking_brain/bookings.html', {'booking': bookings})
-    
+
+@login_required(login_url='login_user')    
+def trash(request):
+    trash = Trash.objects.all()
+    return render(request,'booking_brain/trash.html', {'trashs': trash} )
+
 @login_required(login_url='login_user')    
 def payments(request):
     payment_methods = ['Ebirr', 'CBE', 'IDA', 'IDB']
@@ -82,12 +87,12 @@ def payments(request):
         print(context)
         return render(request,'booking_brain/payments.html', context)
 
+@login_required(login_url='login_user')    
 def delet_payment(request,pk):
     payment_to_delete  = Payment.objects.get(id=pk)
     payment_to_delete.delete()
     messages.success(request,'Payment deleted successfully')
     return redirect('payments')
-
 
 
 @login_required(login_url='login_user')
@@ -117,9 +122,10 @@ def make_payment(request,pk):
         context = {'form':form , 'passenger':passenger, 'booking':booking}
         return render(request,'booking_brain/make_payment.html', context )
 
+@login_required(login_url='login_user')    
 def add_ticket_no(request,pk):
     payment_ = Payment.objects.get(id=pk)
-    passenger = payment.passenger
+    passenger = payment_.passenger
     booking_no = Booking.objects.get(passenger=passenger).Booking_no
     if request.method == 'POST':
         form = Create_Payment(request.POST, instance=payment_)
@@ -131,13 +137,10 @@ def add_ticket_no(request,pk):
             # return render(request , 'booking_brain/single_payment.html' ,{'payment': payment_, 'booking_no':booking_no})
 
     else:
-        form = Create_Payment(instance=payment)
-        context = {'form':form , 'passenger':passenger, 'payment':payment}
+        form = Create_Payment(instance=payment_)
+        context = {'form':form , 'passenger':passenger, 'payment':payment_}
         return render(request,'booking_brain/add_ticket_no.html', context )
         
-
-
-
 @login_required(login_url='login_user')  
 def report_payment(request):
     
@@ -171,6 +174,7 @@ def report_payment(request):
   
     return render(request,'booking_brain/report_payment.html', context)
 
+@login_required(login_url='login_user')
 def custom_report(request):
     if request.method == 'POST':
         start_date = request.POST.get('start_date')
@@ -197,6 +201,7 @@ def custom_report(request):
 @login_required(login_url='login_user')
 def report(request):
     pass
+
 @login_required(login_url='login_user')
 def add_customer(request):
     if request.method == 'POST':
@@ -286,6 +291,8 @@ def delete(request,pk):
     passenger_to_delete = Passenger.objects.filter(id=pk)
     passenger_to_delete.delete()
     return redirect('index')
+
+@login_required(login_url='login_user')    
 def delete_booking(request,pk):
     booking_to_delete = Booking.objects.filter(id=pk)
     passenger = Booking.objects.get(id=pk).passenger.id

@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 # from django.core
 import random
 import string
+from django.utils import timezone
+
 
 def generate_unique_code():
     while True:
@@ -28,7 +30,7 @@ class Passenger(models.Model):
     Departure_place = models.CharField(max_length=50)
     Destination = models.CharField(max_length=50)
     Departure_date = models.DateField()
-    Return_date = models.DateField()
+    Return_date = models.DateField(null=True)
     Amount = models.IntegerField()
     Booked = models.BooleanField(default=False)
     Paid  =  models.BooleanField(default=False)
@@ -75,7 +77,15 @@ class Payment(models.Model):
 
     def __str__(self):
         return (f'{self.passenger.First_name} {self.passenger.Middle_name} {self.passenger.Last_name}')
+class Trash(models.Model):
+    id =models.AutoField(primary_key=True)
+    Date_created = models.DateTimeField(auto_now_add=True)
+    Data = models.CharField(max_length=500)
 
+
+
+    def __str__(self):
+        return (f'Deleted at {self.Date_created} \n {self.Data}')
 
 @receiver(post_save, sender=Payment)
 def update_payment_in_passengerwhen_created(sender, instance, created, **kwargs):
@@ -95,6 +105,8 @@ def update_booking_in_passenger_when_created(sender, instance, created, **kwargs
 def update_payment_in_passengerwhen_deleted(sender, instance, **kwargs):
     # Check if the associated Passenger has any other payments
     passenger = instance.passenger
+    pdata = (f'Payment deleted. Name = {passenger.First_name} {passenger.Middle_name} {passenger.Last_name}. \n payment ref is {instance.Payment_ref}, and amount = {instance.Amount}')
+    Trash.objects.create(Data=pdata)
     other_payments_exist = Payment.objects.filter(passenger=passenger).exclude(id=instance.id).exists()
 
     # If no other payments exist, set ReadyForBooking to False
